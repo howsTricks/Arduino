@@ -3,11 +3,13 @@
 
 unsigned int request_i = 0;
 unsigned int response_i = 0;
+String ssid_prefix = "litCloth_n_";
+String passphrase = "wutwutwut";
 
 String manageRequest(String request);
 
 /* Create the mesh node object */
-ESP8266WiFiMesh mesh_node = ESP8266WiFiMesh(ESP.getChipId(), manageRequest);
+ESP8266WiFiMesh mesh_node = ESP8266WiFiMesh(ESP.getChipId(), ssid_prefix, passphrase, manageRequest);
 
 /**
  * Callback for when other nodes send you data

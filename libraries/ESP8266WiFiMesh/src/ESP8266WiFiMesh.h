@@ -2,9 +2,9 @@
   ESP8266WiFiMesh.h - Mesh network node
   Sets up a Mesh Node which acts as a router, creating a Mesh Network with other nodes. All information
   is passed in both directions, but it is up to the user what the data sent is and how it is dealt with.
- 
+
   Copyright (c) 2015 Julian Fell. All rights reserved.
- 
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@
 #ifndef __WIFIMESH_H__
 #define __WIFIMESH_H__
 
-#include <WiFiClient.h> 
+#include <WiFiClient.h>
 #include <WiFiServer.h>
 #include <functional>
 
@@ -30,10 +30,11 @@ class ESP8266WiFiMesh {
 private:
 	String _ssid;
 	String _ssid_prefix;
+  String _passphrase;
 	uint32_t _chip_id;
 
 	std::function<String(String)> _handler;
-	
+
 	WiFiServer  _server;
 	WiFiClient  _client;
 
@@ -49,9 +50,9 @@ public:
 	 * @chip_id A unique identifier number for the node.
 	 * @handler The callback handler for dealing with received messages. Takes a string as an argument which
 	 *          is the string received from another node and returns the string to send back.
-	 * 
+	 *
 	 */
-	ESP8266WiFiMesh(uint32_t chip_id, std::function<String(String)> handler);
+	ESP8266WiFiMesh(uint32_t chip_id, String ssid_prefix, String passphrase, std::function<String(String)> handler);
 
 	/**
 	 * Initialises the node.
@@ -62,7 +63,7 @@ public:
 	 * Scan for other nodes, and exchange the chosen message with any that are found.
 	 *
 	 * @message The message to send to all other nodes.
-	 * 
+	 *
 	 */
 	void attemptScan(String message);
 

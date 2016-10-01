@@ -25,24 +25,26 @@
 
 #include "ESP8266WiFiMesh.h"
 
-#define SSID_PREFIX      		"Mesh_Node"
+//#define SSID_PREFIX      		"litCloth_node"
 #define SERVER_IP_ADDR			"192.168.4.1"
+//#define PASSPHRASE					"whatwhat"
 #define TEST
 #define SERVER_PORT				4011
 
-ESP8266WiFiMesh::ESP8266WiFiMesh(uint32_t chip_id, std::function<String(String)> handler)
+ESP8266WiFiMesh::ESP8266WiFiMesh(uint32_t chip_id,  String ssid_prefix, String passphrase, std::function<String(String)> handler)
 : _server(SERVER_PORT)
 {
 	_chip_id = chip_id;
-	_ssid = String( String( SSID_PREFIX ) + String( _chip_id ) );
-	_ssid_prefix = String( SSID_PREFIX );
+	_ssid = String( String( ssid_prefix ) + String( _chip_id ) );
+	_ssid_prefix = String( ssid_prefix );
+	_passphrase = String(passphrase);
 	_handler = handler;
 }
 
 void ESP8266WiFiMesh::begin()
 {
 	WiFi.mode(WIFI_AP_STA);
-	WiFi.softAP( _ssid.c_str() );
+	WiFi.softAP( _ssid.c_str(), _passphrase.c_str() );
   	_server.begin();
 }
 
@@ -102,7 +104,7 @@ bool ESP8266WiFiMesh::exchangeInfo(String message, WiFiClient curr_client)
 void ESP8266WiFiMesh::connectToNode(String target_ssid, String message)
 {
 	WiFiClient curr_client;
-	WiFi.begin( target_ssid.c_str() );
+	WiFi.begin( target_ssid.c_str(), _passphrase.c_str() );
 
 	int wait = 1500;
 	while((WiFi.status() == WL_DISCONNECTED) && wait--)
